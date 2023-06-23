@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gym Equipment Store</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <h1>EQUIP</h1>
+
+  <h2>User Registration</h2>
+  <form id="registrationForm">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+      <input type="submit" value="Register">
+    </div>
+  </form>
+
+  <h2>Product List</h2>
+  <div id="productList"></div>
+
+  <script>
+    // Function to fetch and display the product list
+    function getProductList() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "php/products.php", true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+          document.getElementById("productList").innerHTML = xhr.responseText;
+        }
+      };
+      xhr.send();
+    }
+
+    // Add event listener to the registration form
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      var username = document.getElementById("username").value;
+      var email = document.getElementById("email").value;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "php/register.php", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+          alert(xhr.responseText);
+          getProductList();
+        }
+      };
+      xhr.send("username=" + encodeURIComponent(username) + "&email=" + encodeURIComponent(email));
+    });
+
+    // Initial fetch of product list
+    getProductList();
+  </script>
+</body>
+</html>
